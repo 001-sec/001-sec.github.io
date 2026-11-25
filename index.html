@@ -28,10 +28,10 @@ nav a{color:var(--dim);font-size:13px;letter-spacing:.08em;text-transform:upperc
 @media(max-width:760px){nav a:not(.gh){display:none}}
 .gh{border:1px solid var(--red);padding:6px 14px;border-radius:6px;color:#fff!important;box-shadow:0 0 18px #ff2d4744}
 section{padding:96px 6vw;max-width:1180px;margin:auto}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;min-height:86vh}
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center;min-height:86vh}
 @media(max-width:900px){.hero{grid-template-columns:1fr;text-align:center}.hero .cta{justify-content:center}}
 .eyebrow{color:var(--red);letter-spacing:.35em;font-size:12px;font-weight:700}
-h1{font-size:clamp(40px,7vw,84px);line-height:1.02;letter-spacing:.06em;margin:14px 0 18px;text-shadow:0 0 30px #ff2d4777,0 0 4px #ffffff55}
+h1{font-size:clamp(32px,5.2vw,64px);line-height:1.02;letter-spacing:.06em;margin:14px 0 18px;text-shadow:0 0 30px #ff2d4777,0 0 4px #ffffff55}
 .sub{color:var(--dim);font-size:19px;max-width:560px}
 .rule{width:120px;height:4px;background:var(--red);box-shadow:0 0 16px var(--red);margin:26px 0}
 @media(max-width:900px){.rule{margin:26px auto}.sub{margin:auto}}
@@ -41,7 +41,7 @@ h1{font-size:clamp(40px,7vw,84px);line-height:1.02;letter-spacing:.06em;margin:1
 .btn:hover{text-decoration:none;filter:brightness(1.15)}
 .stage{perspective:900px;display:flex;justify-content:center}
 .tilt{width:min(420px,80vw);transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 6s ease-in-out infinite}
-.tilt img{width:100%;display:block;mix-blend-mode:screen;filter:drop-shadow(0 0 40px #ff2d4766)}
+.tilt img{width:100%;display:block;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 52%,transparent 71%);mask-image:radial-gradient(circle at 50% 50%,#000 52%,transparent 71%);filter:drop-shadow(0 0 40px #ff2d4766)}
 @keyframes float{50%{translate:0 -14px}}
 h2{font-size:clamp(26px,4vw,40px);letter-spacing:.04em;margin-bottom:8px}
 h2:after{content:"";display:block;width:64px;height:3px;background:var(--red);box-shadow:0 0 12px var(--red);margin-top:12px}
@@ -116,7 +116,7 @@ footer img{width:46px;margin-bottom:10px;mix-blend-mode:screen}
       </ul>
     </div>
     <div class="panel" aria-label="Illustration of the lab control panel">
-      <div class="eyebrow" style="margin-bottom:10px">CONTROL PANEL</div>
+      <div class="eyebrow" style="margin-bottom:10px">CONTROL PANEL (ILLUSTRATIVE)</div>
       <div class="sw"><span>Scope</span><span class="pill">per-account</span></div>
       <div class="sw"><span>Attempts per window</span><span class="pill">5</span></div>
       <div class="sw"><span>Window</span><span class="pill">60 s</span></div>
