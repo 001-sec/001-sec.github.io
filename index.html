@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ThrottleGate | Rate-limit verification toolkit</title>
+<meta name="description" content="ThrottleGate is a rate-limit verification toolkit for web login forms: a training lab and a GUI auditor, for systems you own or are authorized to assess.">
+<meta property="og:title" content="ThrottleGate">
+<meta property="og:description" content="Rate-limit verification toolkit for web login forms. Authorized use only.">
+<meta property="og:image" content="https://001-sec.github.io/assets/banner.png">
+<link rel="icon" href="assets/logo.png">
+<style>
+:root{--bg:#09090d;--bg2:#0f0f15;--panel:#12121a;--line:#26202a;--red:#ff2d47;--red2:#ff5c70;--dim:#9a98a6;--txt:#ecebf1}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font:16px/1.7 -apple-system,"Segoe UI",Inter,system-ui,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(900px 500px at 15% -5%,#3a0d17 0,transparent 70%),radial-gradient(700px 400px at 100% 30%,#1f0a12 0,transparent 70%)}
+.grid{position:fixed;left:-50%;right:-50%;bottom:0;height:55vh;z-index:-1;opacity:.5;transform:perspective(500px) rotateX(62deg);transform-origin:bottom;
+background-image:linear-gradient(#ff2d4722 1px,transparent 1px),linear-gradient(90deg,#ff2d4722 1px,transparent 1px);background-size:60px 60px;animation:slide 6s linear infinite;
+-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%)}
+@keyframes slide{to{background-position:0 60px}}
+a{color:var(--red2);text-decoration:none}a:hover{text-decoration:underline}
+code,pre,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:28px;padding:14px 6vw;background:#09090dcc;backdrop-filter:blur(10px);border-bottom:1px solid #ffffff0d}
+nav img{width:30px;height:30px;border-radius:6px}
+nav b{letter-spacing:.2em;font-size:13px;margin-right:auto}
+nav a{color:var(--dim);font-size:13px;letter-spacing:.08em;text-transform:uppercase}nav a:hover{color:#fff;text-decoration:none}
+@media(max-width:760px){nav a:not(.gh){display:none}}
+.gh{border:1px solid var(--red);padding:6px 14px;border-radius:6px;color:#fff!important;box-shadow:0 0 18px #ff2d4744}
+section{padding:96px 6vw;max-width:1180px;margin:auto}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;min-height:86vh}
+@media(max-width:900px){.hero{grid-template-columns:1fr;text-align:center}.hero .cta{justify-content:center}}
+.eyebrow{color:var(--red);letter-spacing:.35em;font-size:12px;font-weight:700}
+h1{font-size:clamp(40px,7vw,84px);line-height:1.02;letter-spacing:.06em;margin:14px 0 18px;text-shadow:0 0 30px #ff2d4777,0 0 4px #ffffff55}
+.sub{color:var(--dim);font-size:19px;max-width:560px}
+.rule{width:120px;height:4px;background:var(--red);box-shadow:0 0 16px var(--red);margin:26px 0}
+@media(max-width:900px){.rule{margin:26px auto}.sub{margin:auto}}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:12px 22px;border-radius:8px;font-weight:600;font-size:15px;border:1px solid var(--red);color:#fff}
+.btn.p{background:linear-gradient(180deg,#ff3d57,#c4152c);box-shadow:0 0 28px #ff2d4766}
+.btn:hover{text-decoration:none;filter:brightness(1.15)}
+.stage{perspective:900px;display:flex;justify-content:center}
+.tilt{width:min(420px,80vw);transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 6s ease-in-out infinite}
+.tilt img{width:100%;display:block;mix-blend-mode:screen;filter:drop-shadow(0 0 40px #ff2d4766)}
+@keyframes float{50%{translate:0 -14px}}
+h2{font-size:clamp(26px,4vw,40px);letter-spacing:.04em;margin-bottom:8px}
+h2:after{content:"";display:block;width:64px;height:3px;background:var(--red);box-shadow:0 0 12px var(--red);margin-top:12px}
+.lead{color:var(--dim);max-width:720px;margin:18px 0 40px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:22px}
+.card{position:relative;background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:28px;transition:.25s;transform-style:preserve-3d}
+.card:hover{transform:translateY(-6px) rotateX(3deg);border-color:#ff2d4788;box-shadow:0 18px 50px -18px #ff2d47aa,0 0 0 1px #ff2d4733}
+.card .tag{font-family:ui-monospace,monospace;color:var(--red);font-size:13px}
+.card h3{margin:6px 0 10px;font-size:20px}.card p{color:var(--dim);font-size:15px}
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:10px}
+.ph{border-left:3px solid var(--red);background:#ffffff05;padding:18px 22px;border-radius:0 12px 12px 0;box-shadow:-10px 0 30px -18px var(--red)}
+.ph b{color:var(--red2);letter-spacing:.2em;font-size:12px}.ph h4{margin:4px 0 6px}.ph p{color:var(--dim);font-size:14px}
+.ok{display:inline-block;margin-top:8px;font-size:12px;font-family:ui-monospace,monospace;color:#7dffb0}
+pre{background:#07070a;border:1px solid var(--line);border-radius:12px;padding:20px 24px;overflow:auto;font-size:14px;color:#e8e6ee;box-shadow:inset 0 0 40px #ff2d470d}
+pre .c{color:#6d6a78}pre .r{color:var(--red2)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+ul.l{list-style:none}ul.l li{padding:12px 0 12px 30px;border-bottom:1px solid #ffffff0d;position:relative;color:#cfcdd8}
+ul.l li:before{content:"";position:absolute;left:4px;top:21px;width:9px;height:9px;background:var(--red);transform:rotate(45deg);box-shadow:0 0 10px var(--red)}
+ul.l b{color:#fff}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.sw{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ffffff0d;font-size:14px}
+.pill{font-family:ui-monospace,monospace;font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--red);color:var(--red2);box-shadow:0 0 10px #ff2d4733}
+.notice{border:1px solid #ff2d4799;background:linear-gradient(135deg,#2a0b12,#120a0e);border-radius:16px;padding:36px;box-shadow:0 0 60px -20px var(--red)}
+.notice h2{color:#fff}.notice p{color:#d8d3dc;margin-top:14px}
+.reveal{opacity:0;transform:translateY(26px);transition:.8s}.reveal.in{opacity:1;transform:none}
+footer{text-align:center;color:var(--dim);font-size:13px;padding:60px 6vw 80px;border-top:1px solid #ffffff0d}
+footer img{width:46px;margin-bottom:10px;mix-blend-mode:screen}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<nav>
+  <img src="assets/logo.png" alt=""><b>THROTTLEGATE</b>
+  <a href="#what">Overview</a><a href="#lab">Lab</a><a href="#auditor">Auditor</a><a href="#defense">Defense</a><a href="#notice">Notice</a>
+  <a class="gh" href="https://github.com/001-sec/ThrottleGate">GitHub</a>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">001-SEC &middot; DEFENSIVE TOOLING</div>
+    <h1>THROTTLEGATE</h1>
+    <p class="sub">A rate-limit verification toolkit for web login forms. Confirm that the throttling on your own authentication endpoints behaves the way the configuration says it does.</p>
+    <div class="rule"></div>
+    <div class="cta">
+      <a class="btn p" href="https://github.com/001-sec/ThrottleGate">View on GitHub</a>
+      <a class="btn" href="#quickstart">Quickstart</a>
+    </div>
+  </div>
+  <div class="stage"><div class="tilt" id="tilt"><img src="assets/logo.png" alt="ThrottleGate logo: a glowing hexagonal gate"></div></div>
+</section>
+
+<section id="what" class="reveal">
+  <h2>What it does</h2>
+  <p class="lead">Throttling rules drift. A proxy upgrade, a WAF edit or a framework change can quietly alter how limits are counted, most often by hiding the real client address. ThrottleGate measures the limiter itself, per account identifier and per connection origin, so you find out before someone else does.</p>
+  <div class="cards">
+    <div class="card"><div class="tag">lab/</div><h3>Training Lab</h3><p>A small Flask app with a one-time-code login form. Switch the throttling scope and tune the threshold live, then watch how behavior changes.</p></div>
+    <div class="card"><div class="tag">auditor/</div><h3>GUI Auditor</h3><p>A desktop tool, no programming required. It sends a rate-capped series of test requests to an endpoint you specify and reports where limits trigger.</p></div>
+    <div class="card"><div class="tag">docs/</div><h3>Defensive Guide</h3><p>A short field guide on enforcing per-account throttling correctly, and the failure signature to look for after every edge change.</p></div>
+  </div>
+</section>
+
+<section id="lab" class="reveal">
+  <div class="two">
+    <div>
+      <h2>The training lab</h2>
+      <p class="lead">Learn and demo the concepts locally. The lab keeps all state in memory, depends only on Flask, and exposes a control panel for the rules under test.</p>
+      <ul class="l">
+        <li><b>Attempts per window</b>: set how many failures are allowed before the limiter trips.</li>
+        <li><b>Scope</b>: key the limit by account identifier, by connection origin, or both.</li>
+        <li><b>Live switching</b>: change rules while the auditor runs and watch the verdict follow.</li>
+      </ul>
+    </div>
+    <div class="panel" aria-label="Illustration of the lab control panel">
+      <div class="eyebrow" style="margin-bottom:10px">CONTROL PANEL</div>
+      <div class="sw"><span>Scope</span><span class="pill">per-account</span></div>
+      <div class="sw"><span>Attempts per window</span><span class="pill">5</span></div>
+      <div class="sw"><span>Window</span><span class="pill">60 s</span></div>
+      <div class="sw" style="border:0"><span>Endpoint</span><span class="pill mono">127.0.0.1:5000/api/login</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="auditor" class="reveal">
+  <h2>The auditor and its reports</h2>
+  <p class="lead">Point it at an endpoint you are authorized to assess, confirm authorization, and run. Three phases separate the dimensions a limiter can key on.</p>
+  <div class="phases">
+    <div class="ph"><b>PHASE A</b><h4>Fixed account, direct</h4><p>The limiter should trip at the configured threshold.</p><span class="ok">expected: trips</span></div>
+    <div class="ph"><b>PHASE B</b><h4>Rotating accounts, same origin</h4><p>Requests should pass. A per-origin-only limit would block here.</p><span class="ok">expected: passes</span></div>
+    <div class="ph"><b>PHASE C</b><h4>Fixed account, via your gateway</h4><p>The limiter should trip again, proving it follows the account.</p><span class="ok">expected: trips</span></div>
+  </div>
+  <p class="lead" style="margin-top:30px">Anything else means effective behavior differs from the intended configuration, and the report explains which dimension is missing. Reports are self-contained HTML with no external assets, plus JSON for pipelines, written locally to <code>auditor/reports/</code>.</p>
+  <div class="cards">
+    <div class="card"><h3>Hard caps</h3><p>Single-threaded, max 10 requests per second, 500 per run. A measuring instrument, not a stress tool.</p></div>
+    <div class="card"><h3>Authorization gate</h3><p>Refuses to run without an explicit authorization confirmation, and defaults to a safe mode with minimal traffic.</p></div>
+    <div class="card"><h3>No credentials needed</h3><p>Random codes come from a CSPRNG. No valid credential material is required, because the tool reads limiter behavior, not login success.</p></div>
+  </div>
+</section>
+
+<section id="quickstart" class="reveal">
+  <h2>Quickstart</h2>
+  <p class="lead">Everything runs locally against the bundled lab.</p>
+<pre><span class="c"># Terminal 1: the lab</span>
+cd lab &amp;&amp; pip install -r requirements.txt &amp;&amp; python app.py
+
+<span class="c"># Terminal 2: the auditor GUI, pointed at the lab</span>
+cd auditor &amp;&amp; pip install -r requirements.txt &amp;&amp; python auditor_gui.py
+
+<span class="c"># Or headless</span>
+python engine.py http://127.0.0.1:5000/api/login <span class="r">--yes-i-am-authorized</span></pre>
+</section>
+
+<section id="defense" class="reveal">
+  <h2>The defensive guide</h2>
+  <p class="lead">Per-account throttling survives origin rotation and does not punish bystanders behind shared addresses. The short version:</p>
+  <div class="two">
+    <ul class="l">
+      <li><b>Count failures, not requests.</b> Successful logins should not drain the budget.</li>
+      <li><b>Fail closed under pressure.</b> Record throttled attempts too.</li>
+      <li><b>Answer consistently.</b> Same status, body and timing for unknown account and wrong code.</li>
+    </ul>
+    <ul class="l">
+      <li><b>Use a sliding window</b> and return <code>429</code> with <code>Retry-After</code>.</li>
+      <li><b>Layer, don't substitute.</b> Keep a loose per-origin limit, add progressive delay, alert on crossings.</li>
+      <li><b>Verify, don't assume.</b> Run the auditor after every change that touches the edge.</li>
+    </ul>
+  </div>
+  <p style="margin-top:26px"><a href="https://github.com/001-sec/ThrottleGate/blob/main/docs/defensive-guide.md">Read the full guide &rarr;</a></p>
+</section>
+
+<section id="notice" class="reveal">
+  <div class="notice">
+    <div class="eyebrow">AUTHORIZED USE ONLY</div>
+    <h2 style="margin-top:10px">Built for defenders</h2>
+    <p>Every component of ThrottleGate is built for systems you own or are explicitly authorized to assess, and for learning in the included lab. It sits in the same category as open-source web scanners and load-testing utilities: a verification instrument for defenders.</p>
+    <p>The auditor refuses to run without an explicit authorization confirmation, caps request rates hard, and defaults to a safe mode that keeps test traffic minimal. If that is not what you are doing, this is not the tool you are looking for.</p>
+  </div>
+</section>
+
+<footer>
+  <img src="assets/logo.png" alt=""><br>
+  ThrottleGate &middot; MIT License &middot; <a href="https://github.com/001-sec/ThrottleGate">github.com/001-sec/ThrottleGate</a><br>
+  &copy; 2026 001-sec
+</footer>
+
+<script>
+const t=document.getElementById('tilt');
+addEventListener('pointermove',e=>{const x=(e.clientX/innerWidth-.5),y=(e.clientY/innerHeight-.5);t.style.transform=`rotateY(${x*26}deg) rotateX(${-y*20}deg)`});
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
